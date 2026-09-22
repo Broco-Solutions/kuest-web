@@ -36,6 +36,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# Windows metadata files are not part of the web assets.
+*:Zone.Identifier
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
