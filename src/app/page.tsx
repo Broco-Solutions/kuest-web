@@ -1,69 +1,21 @@
 import Image from "next/image";
-
+import { SiteHeader } from "@/components/site-header";
+import { bikes, formatPrice, products, scooters } from "@/data/products";
+const cityImage = "https://images.unsplash.com/photo-1529422643029-d4585747aaf2?auto=format&fit=crop&w=1800&q=85";
+const scooterImage = "https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=1200&q=85";
+const directions = "https://www.google.com/maps/dir/?api=1&destination=8330+Biscayne+Blvd+Unit+A+Miami+FL";
+function Arrow() { return <span className="arrow" aria-hidden="true">↗</span>; }
 export default function Home() {
-  return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
-  );
+  const featured = [products[0], products[5], products[2]];
+  return <main id="top">
+    <SiteHeader />
+    <section className="hero" aria-labelledby="hero-title"><div className="hero-grid-lines" aria-hidden="true" /><div className="hero-copy"><p className="kicker">MIAMI / SOUTH FLORIDA <span>—</span> EST. FOR THE NEXT RIDE</p><h1 id="hero-title">Move<br /><em>different.</em></h1><p className="hero-intro">Electric bikes and scooters for the city you actually live in.</p><div className="hero-actions"><a className="button button-accent" href="#collection">Explore collection <Arrow /></a><a className="text-link light" href="#showroom">Find us in Miami <Arrow /></a></div></div><div className="hero-product" aria-label="Featured Jasion Thunder PRO electric bike"><div className="hero-orbit orbit-one" /><div className="hero-orbit orbit-two" /><span className="hero-index">01 <i>/</i> 09</span><Image src={featured[0].images[0]} alt="Jasion Thunder PRO electric bike in blue" fill priority sizes="(max-width: 768px) 100vw, 62vw" className="hero-bike" /><div className="hero-product-label"><span>01</span><div><strong>THUNDER PRO</strong><small>Jasion / Electric bike</small></div></div></div><div className="hero-bottom"><span>01 — 09</span><span className="scroll-cue">Scroll to explore <b>↓</b></span><span>Pure electric motion</span></div></section>
+    <section className="statement section-light" aria-labelledby="statement-title"><div className="section-topline"><span>01 / THE KUEST POINT OF VIEW</span><span>01</span></div><div className="statement-grid"><p className="display-label">Electric,<br />with intent.</p><div><h2 id="statement-title">Good design should make you want to go.</h2><p className="body-copy">KUEST brings together electric bikes and scooters that look at home on Biscayne, cut through the city and make the everyday feel a little less ordinary.</p><a className="text-link dark" href="#ride">Why KUEST <Arrow /></a></div></div></section>
+    <section className="collection section-dark" id="collection" aria-labelledby="collection-title"><div className="section-topline"><span>02 / THE COLLECTION</span><span>{String(products.length).padStart(2, "0")} MODELS</span></div><div className="section-heading"><div><p className="eyebrow electric">THE RIGHT MACHINE FOR YOUR ROUTE</p><h2 id="collection-title">Choose your<br /><em>current.</em></h2></div><a className="button button-outline" href="#all-models">View all models <Arrow /></a></div><div className="category-pair"><a href="#bikes" className="category-tile category-bike"><Image src={bikes[1].images[0]} alt="Jasion EB5 Ultra E electric bike" fill sizes="(max-width: 768px) 100vw, 50vw" /><div className="tile-shade" /><div className="tile-content"><span>01 / {bikes.length} models</span><h3>Electric<br /><em>bikes</em></h3><b>Explore bikes <Arrow /></b></div></a><a href="#scooters" className="category-tile category-scooter"><Image src={scooters[2].images[0]} alt="NAVEE UT5 Ultra XUT5 electric scooter" fill sizes="(max-width: 768px) 100vw, 50vw" /><div className="tile-shade" /><div className="tile-content"><span>02 / {scooters.length} models</span><h3>Electric<br /><em>scooters</em></h3><b>Explore scooters <Arrow /></b></div></a></div><div className="product-rail" id="all-models">{featured.map((product, index) => <article className="product-card" key={product.slug}><a className="product-image" href="#showroom"><Image src={product.images[0]} alt={`${product.name} ${product.eyebrow}`} fill sizes="(max-width: 768px) 85vw, 33vw" /><span className="product-number">0{index + 1}</span><span className="product-arrow"><Arrow /></span></a><div className="product-meta"><div><p>{product.eyebrow}</p><h3>{product.name}</h3></div><strong>{formatPrice(product.price)}</strong></div></article>)}</div><div id="bikes" className="sr-only">{bikes.map((product) => product.name).join(", ")}</div><div id="scooters" className="sr-only">{scooters.map((product) => product.name).join(", ")}</div></section>
+    <section className="ride" id="ride" aria-labelledby="ride-title"><div className="ride-image"><Image src={cityImage} alt="Cyclist riding through a sunny city street" fill sizes="100vw" /><div className="ride-image-note">The city is closer<br /><span>when you move through it.</span></div></div><div className="ride-copy"><p className="eyebrow electric">03 / THE RIDE</p><h2 id="ride-title">Your kind<br />of <em>freedom.</em></h2><p className="body-copy">No traffic drama. No parking hunt. Just the city, a little wind and a better way to get from here to there.</p><div className="ride-facts"><div><strong>01</strong><span>See more of<br />your neighborhood</span></div><div><strong>02</strong><span>Make every<br />mile feel yours</span></div></div><a className="text-link light" href="#showroom">Come take a look <Arrow /></a></div></section>
+    <section className="manifesto section-light" aria-labelledby="manifesto-title"><div className="manifesto-mark"><Image src="/brand/favicon-source/favicon-kuest.png" alt="" width={86} height={86} /></div><p className="eyebrow">04 / THE KUEST STANDARD</p><h2 id="manifesto-title">Built for the<br /><em>in-between.</em></h2><p className="body-copy">The short trip. The long way home. The plan that wasn&apos;t a plan. KUEST is for all the good places you can get to when you stop moving like everyone else.</p></section>
+    <section className="showroom section-dark" id="showroom" aria-labelledby="showroom-title"><div className="showroom-image"><Image src={scooterImage} alt="Urban rider on a two-wheeled vehicle" fill sizes="(max-width: 768px) 100vw, 50vw" /><div className="image-caption">A little less car.<br />A lot more city.</div></div><div className="showroom-copy"><p className="eyebrow electric">05 / COME BY</p><h2 id="showroom-title">See it<br /><em>in person.</em></h2><p className="body-copy">Visit the KUEST showroom on Biscayne Boulevard. See the collection up close, compare your options and find the ride that feels like you.</p><div className="address"><span>SHOWROOM</span><address>8330 Biscayne Blvd<br />Unit A<br />Miami, Florida</address><p>Monday – Saturday · 10:00 AM – 7:00 PM<br />Sunday · 11:00 AM – 5:00 PM</p></div><div className="showroom-actions"><a className="button button-accent" href={directions} target="_blank" rel="noreferrer">Get directions <Arrow /></a><a className="text-link light" href="#collection">Browse the collection <Arrow /></a></div></div></section>
+    <section className="final-cta section-light"><p className="eyebrow">06 / START HERE</p><h2>Make your<br /><em>next move.</em></h2><a className="button button-dark" href="#collection">Explore KUEST <Arrow /></a></section>
+    <footer className="footer section-dark"><div className="footer-top"><Image src="/brand/logo/logo-kuest-negro.png" alt="KUEST Electric Bikes" width={230} height={77} /><p>Electric bikes & electric scooters<br />for Miami / South Florida.</p></div><div className="footer-bottom"><span>© {new Date().getFullYear()} KUEST</span><div><a href="#collection">Collection</a><a href="#showroom">Showroom</a><a href={directions} target="_blank" rel="noreferrer">Directions ↗</a></div><span>Designed to move</span></div></footer>
+  </main>;
 }
