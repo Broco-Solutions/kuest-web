@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { ArrowIcon } from "@/components/arrow-icon";
 import { formatPrice, type Product } from "@/data/products";
 
 type ProductGalleryProps = { products: Product[] };
@@ -50,7 +51,7 @@ export function ProductGallery({ products }: ProductGalleryProps) {
             <button className="product-image" type="button" onClick={() => openProduct(product)} aria-label={`View ${product.name} images`}>
               <Image src={product.images[0]} alt={`${product.name} ${product.eyebrow}`} fill sizes="(max-width: 768px) 85vw, 33vw" />
               <span className="product-number">{String(index + 1).padStart(2, "0")}</span>
-              <span className="product-arrow"><span className="arrow" aria-hidden="true">↗</span></span>
+              <span className="product-arrow"><span className="arrow"><ArrowIcon /></span></span>
               <span className="product-view-hint">Open view</span>
             </button>
             <div className="product-meta">
