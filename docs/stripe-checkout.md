@@ -2,7 +2,7 @@
 
 ## Alcance y arquitectura
 
-El repositorio original usa Next.js 16.3.5 (App Router), React 19, TypeScript y pnpm 11.9.0. Tiene nueve modelos en `src/data/products.ts` y una galería interactiva. No tiene carrito, variantes estructuradas, inventario, usuarios ni base de datos de pedidos.
+El repositorio original usa Next.js 16.3.5 (App Router), React 19, TypeScript y pnpm 11.9.0. Esta rama actualiza Next.js y eslint-config-next a 16.4.1 por avisos de seguridad de la versión original. Tiene nueve modelos en `src/data/products.ts` y una galería interactiva. No tiene carrito, variantes estructuradas, inventario, usuarios ni base de datos de pedidos.
 
 La integración conserva el catálogo, precios, fotos y navegación. Agrega compra directa de **una unidad de un modelo** con Checkout alojado en Stripe. No crea productos ni modifica precios en Stripe. No guarda datos de tarjetas. La clave pública `pk_` no se utiliza: el navegador navega a la URL devuelta por el servidor, sin Stripe.js.
 
@@ -118,6 +118,7 @@ pnpm lint
 pnpm test
 pnpm build
 pnpm check:client-secrets
+pnpm audit
 ```
 
 Con `pnpm start --port 3100` en otra terminal y pagos deshabilitados, `node scripts/smoke-checkout.mjs http://localhost:3100` comprueba por HTTP el catálogo, retornos, noindex/no-referrer y el bloqueo del endpoint. El script sólo permite hosts locales.
@@ -154,3 +155,11 @@ stripe listen --events checkout.session.completed,checkout.session.async_payment
 Para detener nuevas compras, poner `STRIPE_CHECKOUT_ENABLED=false` y volver a desplegar. El webhook y la página de estado siguen funcionando para pagos existentes mientras se mantengan la clave y el signing secret. Sesiones abiertas en Stripe no se cancelan con esa bandera; expirarlas manualmente si también deben detenerse.
 
 Referencias oficiales: [claves restringidas](https://docs.stripe.com/keys/restricted-api-keys), [Checkout Sessions](https://docs.stripe.com/api/checkout/sessions/create), [fulfillment y webhooks](https://docs.stripe.com/checkout/fulfillment?ui=full-page), [firmas y reintentos](https://docs.stripe.com/events/manage-webhook-endpoints), [Stripe Tax con Checkout](https://docs.stripe.com/tax/checkout).
+
+## Dependencias y revisión de seguridad
+
+Validación final de esta rama: TypeScript, ESLint, 18 pruebas, build de Next.js 16.4.1, comprobación HTTP local y análisis de secretos en bundles del navegador aprobados; `pnpm audit` informa **0 vulnerabilidades conocidas**. No se ejecutaron compras reales ni pruebas end-to-end contra una cuenta Stripe; esas pruebas y la revisión visual quedan pendientes de las credenciales y configuración de sandbox de PRIME RIDE.
+
+El override de minimatch apunta al tarball oficial de npm de 11.0.1 porque el índice de instalación devolvió metadatos desactualizados; la ficha de esa versión y el tarball fueron verificados en el registro. El lockfile conserva la integridad del archivo.
+
+La auditoría del lockfile previo detectó vulnerabilidades heredadas, incluidas [GHSA-2464-fhr4-w9xw](https://github.com/advisories/GHSA-2464-fhr4-w9xw) y [GHSA-673q-mjm6-r5xr](https://github.com/advisories/GHSA-673q-mjm6-r5xr). Next.js 16.4.1 corrige esos avisos. Se actualizan también dependencias transitivas afectadas. Dos overrides acotados en `pnpm-workspace.yaml` fijan source-map-js >=1.2.2 y minimatch 7–10 en 11.0.1, por [GHSA-68fv-2mgg-jv7q](https://github.com/advisories/GHSA-68fv-2mgg-jv7q) y [GHSA-g3hv-75wg-m249](https://github.com/advisories/GHSA-g3hv-75wg-m249). La dependencia legacy minimatch 3 queda intacta; revisar si estos overrides pueden retirarse cuando los paquetes padres incluyan versiones corregidas. ESLint y build verifican compatibilidad con la actualización. La actualización se mantiene en la rama feature y requiere revisión/merge de Tomás antes de afectar producción. Volver a ejecutar `pnpm audit` al fusionar: un resultado sin avisos sólo describe las vulnerabilidades publicadas que el registro conoce en ese momento.

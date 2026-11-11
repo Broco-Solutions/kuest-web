@@ -2,3 +2,8 @@ allowBuilds:
   esbuild: true
   sharp: false
   unrs-resolver: false
+
+# Security fixes for inherited build/lint dependencies; keep legacy minimatch 3 intact.
+overrides:
+  'source-map-js@<1.2.2': 1.2.2
+  'minimatch@>=7.0.0 <11.0.1': https://registry.npmjs.org/minimatch/-/minimatch-11.0.1.tgz
