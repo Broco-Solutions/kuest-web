@@ -3,11 +3,12 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { ArrowIcon } from "@/components/arrow-icon";
+import { BuyButton } from "@/components/buy-button";
 import { formatPrice, type Product } from "@/data/products";
 
-type ProductGalleryProps = { products: Product[] };
+type ProductGalleryProps = { products: Product[]; checkoutEnabled?: boolean; automaticTax?: boolean };
 
-export function ProductGallery({ products }: ProductGalleryProps) {
+export function ProductGallery({ products, checkoutEnabled = false, automaticTax = false }: ProductGalleryProps) {
   const [activeProduct, setActiveProduct] = useState<Product | null>(null);
   const [activeImage, setActiveImage] = useState(0);
 
@@ -58,6 +59,7 @@ export function ProductGallery({ products }: ProductGalleryProps) {
               <div><p>{product.eyebrow}</p><h3>{product.name}</h3></div>
               <strong>{formatPrice(product.price)}</strong>
             </div>
+            {checkoutEnabled && <><BuyButton productSlug={product.slug} /><p className="purchase-note">{automaticTax ? "Tax calculated at checkout. " : "Tax included. "}Pickup in Miami. No shipping.</p></>}
           </article>
         ))}
       </div>
@@ -77,6 +79,7 @@ export function ProductGallery({ products }: ProductGalleryProps) {
               )}
             </div>
             <div className="lightbox-meta"><span>{activeProduct.eyebrow}</span><h3>{activeProduct.name}</h3><strong>{formatPrice(activeProduct.price)}</strong></div>
+            {checkoutEnabled && <><BuyButton key={activeProduct.slug} productSlug={activeProduct.slug} /><p className="purchase-note">{automaticTax ? "Tax calculated at checkout. " : "Tax included. "}Pickup in Miami. No shipping.</p></>}
             {activeProduct.images.length > 1 && <div className="lightbox-thumbs" aria-label="Product images">{activeProduct.images.map((image, index) => <button className={`lightbox-thumb${index === activeImage ? " is-active" : ""}`} type="button" key={image} onClick={() => setActiveImage(index)} aria-label={`View image ${index + 1}`}><Image src={image} alt="" fill sizes="64px" /></button>)}</div>}
           </div>
         </div>
