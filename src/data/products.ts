@@ -1,6 +1,6 @@
 export type ProductCategory = "bike" | "scooter";
 export type Product = { slug: string; name: string; category: ProductCategory; price: number; images: string[]; eyebrow: string };
-const p = (name: string) => `/products/${name}`;
+const p = (name: string) => `/products/${encodeURIComponent(name)}`;
 export const products: Product[] = [
   { slug: "jasion-thunder-pro", name: "Jasion Thunder PRO", category: "bike", price: 3400, eyebrow: "Electric bike", images: [p("Jasion Thunder PRO azul - $3400.jpeg"), p("Jasion Thunder PRO negra - $3400.jpeg")] },
   { slug: "jasion-eb5-ultra-e", name: "Jasion EB5 Ultra E", category: "bike", price: 2900, eyebrow: "Electric bike", images: [p("Jasion EB5 Ultra E azul - $2900.jpeg"), p("Jasion EB5 Ultra E negra - $2900.jpeg")] },
@@ -13,5 +13,10 @@ export const products: Product[] = [
   { slug: "navee-gt3", name: "NAVEE GT3", category: "scooter", price: 800, eyebrow: "Electric scooter", images: [p("NAVEE GT3  - $800.jpeg")] },
 ];
 export const bikes = products.filter((product) => product.category === "bike");
+export const productColors: Record<string, string[]> = {
+  "jasion-thunder-pro": ["Blue", "Black"],
+  "jasion-eb5-ultra-e": ["Blue", "Black"],
+  "jasion-eb6-foldable-e": ["Blue", "Black", "Pink"],
+};
 export const scooters = products.filter((product) => product.category === "scooter");
 export function formatPrice(price: number) { return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(price); }

@@ -3,11 +3,12 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { ArrowIcon } from "@/components/arrow-icon";
+import { BuyButton } from "@/components/buy-button";
 import { formatPrice, type Product } from "@/data/products";
 
-type ProductGalleryProps = { products: Product[] };
+type ProductGalleryProps = { products: Product[]; purchasableSlugs: string[] };
 
-export function ProductGallery({ products }: ProductGalleryProps) {
+export function ProductGallery({ products, purchasableSlugs }: ProductGalleryProps) {
   const [activeProduct, setActiveProduct] = useState<Product | null>(null);
   const [activeImage, setActiveImage] = useState(0);
 
@@ -58,6 +59,7 @@ export function ProductGallery({ products }: ProductGalleryProps) {
               <div><p>{product.eyebrow}</p><h3>{product.name}</h3></div>
               <strong>{formatPrice(product.price)}</strong>
             </div>
+            <BuyButton slug={product.slug} name={product.name} enabled={purchasableSlugs.includes(product.slug)} />
           </article>
         ))}
       </div>

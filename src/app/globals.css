@@ -236,3 +236,17 @@ h1 em, h2 em, h3 em { font-style: normal; color: var(--cyan); }
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
+
+/* Model checkout and payment status */
+.product-purchase { display: grid; gap: 12px; margin-top: 18px; }
+.product-purchase p { font-size: 12px; line-height: 1.6; color: #c9c9bd; }
+.product-purchase label { display: grid; gap: 7px; font-size: 12px; }
+.product-purchase select { width: 100%; min-height: 44px; padding: 10px 12px; color: #f2f2e8; background: #181b17; border: 1px solid #6b7065; border-radius: 0; font: inherit; }
+.product-purchase .button { width: 100%; justify-content: center; cursor: pointer; }
+.product-purchase button:disabled { opacity: .65; cursor: wait; }
+.product-purchase .checkout-error { color: #ffb2a5; }
+.product-purchase :focus-visible, .checkout-result a:focus-visible { outline: 3px solid #d1f35c; outline-offset: 4px; }
+.checkout-result { min-height: 100dvh; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 26px; padding: clamp(24px, 7vw, 100px); background: #151812; color: #f2f2e8; }
+.checkout-result h1 { font-size: clamp(36px, 7vw, 82px); line-height: 1.05; max-width: 1000px; }
+.checkout-result p { max-width: 640px; line-height: 1.7; }
+.checkout-result address { font-style: normal; line-height: 1.8; }
