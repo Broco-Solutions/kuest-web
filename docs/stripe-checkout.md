@@ -1,5 +1,7 @@
 # Stripe Checkout — KUEST Electric / PRIME RIDE
 
+> **Revisión del 13 de noviembre de 2026:** esta guía describe `feature/stripe-checkout`, no la implementación que ahora contiene `origin/main`. Hay conflictos y variables incompatibles. Consultar primero [el informe para Tomás](stripe-review-2026-11-13.md). La comprobación pública encontró botones de compra y checkout disponible; no se verificó el modo sandbox/live del sitio. No asumir que producción sigue deshabilitada.
+
 ## Alcance y arquitectura
 
 El repositorio original usa Next.js 16.3.5 (App Router), React 19, TypeScript y pnpm 11.9.0. Esta rama actualiza Next.js y eslint-config-next a 16.4.1 por avisos de seguridad de la versión original. Tiene nueve modelos en `src/data/products.ts` y una galería interactiva. No tiene carrito, variantes estructuradas, inventario, usuarios ni base de datos de pedidos.

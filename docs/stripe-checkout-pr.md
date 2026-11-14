@@ -1,18 +1,19 @@
-# feat: integrate secure Stripe hosted Checkout
+# review: compare original Stripe checkout with current main
 
-Base: `main` · Head: `feature/stripe-checkout`
+Base: `main` · Head: `feature/stripe-checkout` · Suggested status: **Draft**
 
-KUEST currently presents nine priced models without a purchase flow. This change adds direct purchase of one catalog model through Stripe-hosted Checkout while preserving the existing gallery and storefront. Payments stay disabled until Tomás confirms the commercial configuration and enables the Vercel flag.
+The original branch adds Stripe-hosted Checkout for one catalog model, server-side price validation, signed webhooks, durable verification metadata and disabled-by-default payments. It contains commits `f72f998` and `baa1002`.
 
-- Validate product, one-unit quantity, USD price, Stripe Product metadata and active Price on the server; reject client-supplied amounts or redirects.
-- Support restricted API keys and keep all secrets behind `server-only`. Block live keys outside Vercel Production. No publishable key or Stripe.js required.
-- Add success/cancel/error states backed by server-side Stripe status. Verify signed webhooks, tolerate duplicate/out-of-order events and durably mark verified payments in Stripe.
-- Keep fulfillment manual in Stripe with explicit showroom pickup only. No shipping rates, inventory system, variants or product prices were invented.
-- Upgrade Next.js and eslint-config-next from 16.3.5 to 16.4.1 and refresh affected dependencies after the inherited lockfile audit reported critical framework advisories.
-- Document minimum permissions, matching catalog lookup keys, tax/pickup requirements, webhook setup, sandbox QA and Vercel activation in [the handoff guide](stripe-checkout.md).
+Current main at `2675bcd` already implements a different Checkout flow, introduced by `59a0d28`: color selection, exclusive pickup taxes, explicit Price environment variables, dynamic payment methods and a different live-payment flag. The original histories diverge by two implementation commits on each side and have conflicts in twelve files. Preserve the newer framework version (16.4.6), colors, pickup tax location and existing Session metadata compatibility during reconciliation.
 
-Validation: `pnpm typecheck`, `pnpm lint`, `pnpm test` (18 tests, mocked Stripe), `pnpm build`, `pnpm check:client-secrets`, `pnpm audit`, and local HTTP smoke checks. No real charges, production deployment, secret retrieval or automatic merge.
+The [review report](https://github.com/Broco-Solutions/kuest-web/blob/feature/stripe-checkout/docs/stripe-review-2026-11-13.md) includes the differences, concrete Vercel/Stripe sandbox instructions and a separate patch against `2675bcd`. The patch fixes three reproduced security regressions and two audited development dependency advisories. Its runtime changes are an attachment for a fresh branch from current main; they are not applied to this historical feature branch.
 
-The final dependency audit reports zero known vulnerabilities. Browser artifact scanning found no Stripe private keys or server secret environment references. Sandbox end-to-end and visual QA remain pending.
+Validation:
 
-Before activation, Tomás must configure sandbox/live Products and Prices, `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_MODE`, `SITE_URL`, explicit fulfillment/tax settings and the webhook. Confirm checkout permissions with an equivalent restricted test key, complete sandbox end-to-end/visual QA, confirm policies, stock and taxes, configure abuse protection, then enable `STRIPE_CHECKOUT_ENABLED` through a reviewed deployment. These account-specific checks are pending; local checks do not validate the supplied live key or the merchant's Stripe settings.
+- Original feature: 18 tests, TypeScript, ESLint, build, browser secret scan, local HTTP smoke and audit passed; zero known vulnerabilities.
+- Current main without corrections: 19 tests, ESLint and build passed; one low and one moderate development dependency advisory. Three added regression tests fail.
+- Current main with the attached corrections: 22 tests, TypeScript, ESLint, Next.js 16.4.6 build, browser secret scan and local HTTP smoke passed; zero known vulnerabilities. Patch application checked against the main baseline.
+
+The public storefront displays “Buy now”; an invalid checkout request returns JSON 400 rather than disabled-state 503. The deployment's sandbox/live mode has not been verified. Tomás must check Production settings before relying on the earlier assumption that payments remain disabled.
+
+No merge, production deployment, payment activation or real charge was performed. Account-specific sandbox end-to-end tests, effective restricted-key permissions, webhook delivery and visual QA remain pending. This is prepared PR text; it does not establish that a PR exists or has been opened.
