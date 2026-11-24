@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { PaidBagCleanup } from "@/components/paid-bag-cleanup";
 import type { Metadata } from "next";
 import { getCheckoutStatus } from "@/lib/payment";
 export const metadata: Metadata = { title: "Payment status | KUEST", robots: { index: false, follow: false } };
@@ -12,5 +13,5 @@ export default async function Success({ searchParams }: { searchParams: Promise<
     failed: ["Payment not completed", "This payment was not completed. You can return to the collection to try again."],
     unavailable: ["We could not verify your payment", "If you already paid, please check your receipt or contact the showroom before trying again."],
   }[status];
-  return <main className="checkout-result"><Link href="/" className="eyebrow">KUEST / MIAMI</Link><h1>{copy[0]}</h1><p>{copy[1]}</p><address>Showroom pickup<br />8330 Biscayne Blvd, Unit A<br />Miami, FL 33138</address>{status === "pending" && <a className="button button-outline" href={`/checkout/success?session_id=${session_id}`}>Check payment status</a>}<Link className="button button-accent" href="/#all-models">Back to collection</Link></main>;
+  return <main className="checkout-result">{status === "paid" && typeof session_id === "string" && <PaidBagCleanup sessionId={session_id} />}<Link href="/" className="eyebrow">KUEST / MIAMI</Link><h1>{copy[0]}</h1><p>{copy[1]}</p><address>Showroom pickup<br />8330 Biscayne Blvd, Unit A<br />Miami, FL 33138</address>{status === "pending" && <a className="button button-outline" href={`/checkout/success?session_id=${session_id}`}>Check payment status</a>}<Link className="button button-accent" href="/#all-models">Back to collection</Link></main>;
 }

@@ -11,8 +11,7 @@ export function getStripeConfiguration() {
 export function getCheckoutConfiguration() {
   const stripe = getStripeConfiguration();
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET?.trim();
-  const pickupLocation = process.env.STRIPE_PICKUP_TAX_LOCATION?.trim();
-  if (!stripe || !webhookSecret?.startsWith("whsec_") || !/^taxloc_[A-Za-z0-9]+$/.test(pickupLocation ?? "")) return null;
+  if (!stripe || !webhookSecret?.startsWith("whsec_")) return null;
   if (stripe.livemode && (
     process.env.NODE_ENV !== "production" ||
     process.env.STRIPE_LIVE_CHECKOUT_ENABLED !== "true" ||
@@ -23,7 +22,7 @@ export function getCheckoutConfiguration() {
     const local = !stripe.livemode && url.protocol === "http:" && ["localhost", "127.0.0.1"].includes(url.hostname);
     if ((!local && url.protocol !== "https:") || url.username || url.password || url.pathname !== "/" || url.search || url.hash) return null;
     if (stripe.livemode && url.origin !== "https://kuest-electric.com") return null;
-    return { ...stripe, siteOrigin: url.origin, pickupLocation: pickupLocation! };
+    return { ...stripe, siteOrigin: url.origin };
   } catch {
     return null;
   }

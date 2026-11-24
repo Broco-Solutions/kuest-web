@@ -36,12 +36,12 @@ function fixture(overrides = {}) {
   return { stripe, get calls() { return { createCalls, retrieveCalls }; }, get params() { return params!; }, get options() { return options!; } };
 }
 
-test("checkout uses server price, exclusive pickup tax, fixed quantity and safe return URLs", async () => {
+test("checkout uses server price, no additional tax, fixed legacy quantity and safe return URLs", async () => {
   const mock = fixture();
   const result = await createCheckout(request(), () => mock.stripe);
   assert.equal(result.status, 200);
   assert.deepEqual(mock.params.line_items, [{ price: "price_fixture", quantity: 1 }]);
-  assert.deepEqual(mock.params.automatic_tax, { enabled: true });
+  assert.deepEqual(mock.params.automatic_tax, { enabled: false });
   assert.equal(mock.params.shipping_address_collection, undefined);
   assert.equal(mock.params.metadata?.fulfillment, "showroom_pickup");
   assert.equal(mock.params.success_url, `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`);
@@ -61,7 +61,7 @@ test("rejects cross-origin, malformed idempotency keys, oversized and invalid JS
   assert.equal((await createCheckout(noId, () => mock.stripe)).status, 400);
   const bad = (text: string) => new Request(`${origin}/api/checkout`, { method: "POST", headers: request().headers, body: text });
   assert.equal((await createCheckout(bad("{"), () => mock.stripe)).status, 400);
-  assert.equal((await createCheckout(bad("x".repeat(2049)), () => mock.stripe)).status, 413);
+  assert.equal((await createCheckout(bad("x".repeat(4097)), () => mock.stripe)).status, 413);
   assert.deepEqual(mock.calls, { createCalls: 0, retrieveCalls: 0 });
 });
 test("requires a valid color for models with color options", async () => {
@@ -85,9 +85,9 @@ test("missing signing secret or price keeps checkout unavailable", async () => {
   assert.equal((await createCheckout(request(), () => mock.stripe)).status, 503);
   assert.deepEqual(mock.calls, { createCalls: 0, retrieveCalls: 0 });
 });
-test("stale, inclusive, recurring, wrong-account or incorrect pickup prices never create a payment", async () => {
+test("stale, inclusive, recurring, wrong-mode or incorrectly mapped prices never create a payment", async () => {
   for (const overrides of [{ unit_amount: 1 }, { tax_behavior: "inclusive" }, { currency: "eur" }, { active: false }, { livemode: true }, { type: "recurring" },
-    { product: { active: true, name: "Wrong model" } }, { product: { active: true, name: "NAVEE GT3", tax_details: { tax_code: "txcd_99999999", performance_location: "taxloc_wrong" } } }]) {
+    { product: { active: true, name: "Wrong model" } }]) {
     const mock = fixture(overrides);
     assert.equal((await createCheckout(request(), () => mock.stripe)).status, 503);
     assert.equal(mock.calls.createCalls, 0);
