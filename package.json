@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
-    "test:commerce": "node --import tsx --test tests/commerce.test.ts"
+    "test:commerce": "node --import tsx --test tests/*.test.ts"
   },
   "dependencies": {
     "next": "16.4.6",
